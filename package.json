@@ -1,0 +1,13 @@
+{
+  "name": "adota-me",
+  "version": "1.0.0",
+  "description": "monorepo for docpost-mvp app",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "client": "cd client && npm run dev",
+    "server": "cd server && npm run start"
+  },
+  "author": "",
+  "license": "ISC"
+}
