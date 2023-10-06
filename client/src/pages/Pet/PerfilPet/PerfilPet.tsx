@@ -70,7 +70,7 @@ export const PetProfile = () => {
 
   const [isOwner, setIsOwner] = useState(pet?.user.id === currentAccount?.id);
 
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   useEffect(() => {
     const getPetFromApi = async () => {
@@ -107,12 +107,10 @@ export const PetProfile = () => {
         display={"flex"}
         justifyContent={"space-between"}
       >
-        <BiArrowBack onClick={() => navigate('/')} fontSize={30} />
+        <BiArrowBack onClick={() => navigate("/")} fontSize={30} />
         <Box>
           {isOwner && pet && (
-            <Flex
-              gap={6}
-            >
+            <Flex gap={6}>
               <Link to={"/pet/editar/" + pet?.id}>
                 <IconButton
                   icon={<BiEdit />}
@@ -131,9 +129,13 @@ export const PetProfile = () => {
                 color={"red.500"}
                 bg={"gray.50"}
                 onClick={() => {
-                  warningAlert('Quer mesmo tirar o bichinho da adoção?', 'Não é possível desfazer essa ação', () => {
-                    deletePet(pet.id).then(() => navigate('/'))
-                  })
+                  warningAlert(
+                    "Quer mesmo tirar o bichinho da adoção?",
+                    "Não é possível desfazer essa ação",
+                    () => {
+                      deletePet(pet.id).then(() => navigate("/"));
+                    }
+                  );
                 }}
               />
             </Flex>

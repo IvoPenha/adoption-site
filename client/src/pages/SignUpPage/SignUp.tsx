@@ -9,9 +9,10 @@ import {
   Text,
   useColorModeValue,
 } from "@chakra-ui/react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useForm, SubmitHandler } from "react-hook-form";
-import { signUp } from '../../services/';
+import { signUp } from "../../services/";
+import { successAlert } from "../../shared/components";
 
 export const SignUpPage = () => {
   const {
@@ -22,8 +23,21 @@ export const SignUpPage = () => {
   } = useForm<any>();
 
   const form = watch();
-
-  const onSubmit: SubmitHandler<any> = (data) => signUp(data);
+  const navigate = useNavigate();
+  const onSubmit: SubmitHandler<any> = async (data) => {
+    const dataNascimentoFormatted = new Date(data.nascimento).toISOString();
+    const user = await signUp({
+      ...data,
+      nascimento: dataNascimentoFormatted,
+    });
+    if (user.response.id) {
+      successAlert(
+        "Usuário cadastrado com sucesso",
+        "Você será redirecionado para a página de login",
+        () => navigate("/login")
+      );
+    }
+  };
   return (
     <>
       <Box
@@ -69,35 +83,39 @@ export const SignUpPage = () => {
                     e.preventDefault();
                   }}
                 >
-
                   <FormControl id="nome">
                     <FormLabel>nome</FormLabel>
                     <Input
                       autoComplete="nome"
-                      {...(register("nome", { required: true }))}
+                      {...register("nome", { required: true })}
                     />
-                    {errors.nome && <Text
-                      color="red.500"
-                      fontSize="xs"
-                    >Insira um email válido</Text>}
+                    {errors.nome && (
+                      <Text color="red.500" fontSize="xs">
+                        Insira um email válido
+                      </Text>
+                    )}
                   </FormControl>
                   <FormControl id="email">
                     <FormLabel>Email</FormLabel>
                     <Input
                       autoComplete="email"
-                      {...(register("email", { required: true, pattern: /^\S+@\S+$/i }))}
+                      {...register("email", {
+                        required: true,
+                        pattern: /^\S+@\S+$/i,
+                      })}
                     />
-                    {errors.email && <Text
-                      color="red.500"
-                      fontSize="xs"
-                    >Insira um email válido</Text>}
+                    {errors.email && (
+                      <Text color="red.500" fontSize="xs">
+                        Insira um email válido
+                      </Text>
+                    )}
                   </FormControl>
                   <FormControl id="senha">
                     <FormLabel>Senha</FormLabel>
                     <Input
                       type="password"
                       autoComplete="senha"
-                      {...(register("senha", { required: true }))}
+                      {...register("senha", { required: true })}
                     />
                   </FormControl>
                   <FormControl id="password">
@@ -105,12 +123,15 @@ export const SignUpPage = () => {
                     <Input
                       type="password"
                       autoComplete="password"
-                      {...(register("confirmPassword", { required: true, validate: (value) => value === form.senha }))}
+                      {...register("confirmPassword", {
+                        required: true,
+                        validate: (value) => value === form.senha,
+                      })}
                     />
-                    {errors.confirmPassword && (<Text
-                      color="red.500"
-                      fontSize="xs"
-                    >As senhas não coincidem</Text>
+                    {errors.confirmPassword && (
+                      <Text color="red.500" fontSize="xs">
+                        As senhas não coincidem
+                      </Text>
                     )}
                   </FormControl>
                   <FormControl id="nascimento">
@@ -118,13 +139,16 @@ export const SignUpPage = () => {
                     <Input
                       type="date"
                       autoComplete="nascimento"
-                      {...register("nascimento", { required: true, validate: (value) => new Date(value) < new Date() })}
+                      {...register("nascimento", {
+                        required: true,
+                        validate: (value) => new Date(value) < new Date(),
+                      })}
                     />
-                    {errors.nascimento && <Text
-                      color="red.500"
-                      fontSize="xs"
-                    >Insira uma data válida</Text>}
-
+                    {errors.nascimento && (
+                      <Text color="red.500" fontSize="xs">
+                        Insira uma data válida
+                      </Text>
+                    )}
                   </FormControl>
                   {/* <FormControl id="cpf">
                     <FormLabel>CPF</FormLabel>
@@ -135,15 +159,18 @@ export const SignUpPage = () => {
                   <FormControl id="telefone">
                     <FormLabel>Telefone</FormLabel>
                     <Input
-                      {...(register("telefone", { required: true, validate: (value) => value.length >= 10 }))}
+                      {...register("telefone", {
+                        required: true,
+                        validate: (value) => value.length >= 10,
+                      })}
                       type="text"
                       autoComplete="telefone"
                     />
-                    {errors.telefone && <Text
-                      color="red.500"
-                      fontSize="xs"
-                    >Insira um telefone válido</Text>}
-
+                    {errors.telefone && (
+                      <Text color="red.500" fontSize="xs">
+                        Insira um telefone válido
+                      </Text>
+                    )}
                   </FormControl>
                   {/* <FormControl id="cep">
                     <FormLabel>CEP</FormLabel>
