@@ -8,6 +8,7 @@ import {
   Icon,
   IconProps,
 } from '@chakra-ui/react'
+import { useNavigate } from 'react-router-dom';
 
 const Illustration = (props: IconProps) => {
   return (
@@ -332,7 +333,9 @@ function scrollTo(ref: React.MutableRefObject<any>) {
 }
 
 
+
 export function Hero({ PortedRef }: { PortedRef: React.MutableRefObject<any> }) {
+  const navigate = useNavigate()
   return (
     <Container maxW={'5xl'}>
       <Stack
@@ -364,7 +367,7 @@ export function Hero({ PortedRef }: { PortedRef: React.MutableRefObject<any> }) 
           >
             Ajudar um amiguinho
           </Button>
-          <Button rounded={'full'} px={6}>
+          <Button rounded={'full'} px={6} onClick={() => navigate('/cadastro')}>
             Cadastrar
           </Button>
         </Stack>

@@ -29,3 +29,13 @@ export const getPetByUser = async (userId: number) => {
   const response = await api.get(`/pets/${userId}`);
   return response.data;
 };
+
+export const deletePet = async (id: number) => {
+  const response = await api.delete(`/pet/${id}`);
+  return response.data;
+};
+
+export const updatePet = async (id: number, pet: IPet) => {
+  const response = await api.put(`/pet/${id}`, pet);
+  return response.data;
+};

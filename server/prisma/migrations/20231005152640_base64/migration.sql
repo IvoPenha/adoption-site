@@ -9,8 +9,8 @@ CREATE TABLE "Pet" (
     "descricao" TEXT NOT NULL,
     "especie" TEXT NOT NULL,
     "ativo" BOOLEAN NOT NULL DEFAULT true,
+    "fotos" TEXT[],
     "userId" INTEGER NOT NULL,
-    "fotos" BYTEA[],
 
     CONSTRAINT "Pet_pkey" PRIMARY KEY ("id")
 );
@@ -18,22 +18,23 @@ CREATE TABLE "Pet" (
 -- CreateTable
 CREATE TABLE "Profile" (
     "id" SERIAL NOT NULL,
-    "userId" INTEGER,
     "preferenciaEntrega" TEXT,
-    "preferenciaPorte" TEXT,
+    "fotoPerfil" TEXT,
+    "descricao" TEXT,
+    "userId" INTEGER,
 
     CONSTRAINT "Profile_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
-CREATE TABLE "adoption" (
+CREATE TABLE "Adoption" (
     "id" SERIAL NOT NULL,
     "userId" INTEGER NOT NULL,
     "adoptedById" INTEGER NOT NULL,
     "petId" INTEGER NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
-    CONSTRAINT "adoption_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "Adoption_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -44,16 +45,18 @@ CREATE TABLE "User" (
     "senha" TEXT NOT NULL,
     "nascimento" TIMESTAMP(3),
     "telefone" TEXT,
-    "idPets" INTEGER[],
 
     CONSTRAINT "User_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateIndex
+CREATE INDEX "Pet_userId_idx" ON "Pet"("userId");
+
+-- CreateIndex
 CREATE UNIQUE INDEX "Profile_userId_key" ON "Profile"("userId");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "User_email_key" ON "User"("email");
+CREATE INDEX "Profile_userId_idx" ON "Profile"("userId");
 
--- AddForeignKey
-ALTER TABLE "Profile" ADD CONSTRAINT "Profile_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+-- CreateIndex
+CREATE UNIQUE INDEX "User_email_key" ON "User"("email");

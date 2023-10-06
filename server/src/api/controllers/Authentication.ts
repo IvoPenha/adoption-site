@@ -1,10 +1,9 @@
 import { Response } from "express";
 import { PrismaClient, User } from "@prisma/client";
 import { decryptText, encryptText } from "../../core";
-import { createProfile, createProfileWithoutResponse } from "./Profile";
+// import { createProfileWithoutResponse } from "./Profile";
 import { BaseRequest, BaseResponse } from "../../domain";
-
-const jwt = require("jsonwebtoken");
+import jwt from "jsonwebtoken";
 
 const prisma = new PrismaClient();
 
@@ -44,8 +43,8 @@ export async function signUp(req: BaseRequest<User>, res: BaseResponse<User>) {
     // const profile = createProfile({body: {userId: user.id}})
     // console.log(profile)
 
-    const profile = await createProfileWithoutResponse(user.id);
-    console.log(profile);
+    // const profile = await createProfileWithoutResponse(user.id);
+    // console.log(profile);
 
     res.status(200).json({
       message: "Cadastro Bem sucedido",
@@ -101,42 +100,21 @@ export async function signIn(
       email: user.email,
       nome: user.nome,
     };
-    jwt.sign(
-      { ...userDTO, expires_in: new Date().getTime() + 3600000 },
-      "secretkey",
-      (err: unknown, token: string) => {
-        res.status(200).json({
-          message: "Login bem-sucedido",
-          response: { accessToken: token },
-        });
-      }
+    const token = jwt.sign(
+      {
+        expires_in: Math.floor(Date.now() / 1000) + 60 * 60,
+        ...userDTO,
+      },
+      "secretkey"
     );
+    res.status(200).json({
+      message: "Login realizado com sucesso",
+      response: { accessToken: token },
+    });
   } catch (error) {
     res.status(500).json({
       message: "Ocorreu um erro durante o login",
       response: { erro: error },
     });
   }
-}
-
-export async function verificarToken(
-  req: BaseRequest<User>,
-  res: BaseResponse<User>,
-  next: any
-) {
-  const { authorization } = req.headers;
-  if (!authorization) {
-    throw new Error("Token não informado");
-  }
-  const token = authorization.split(" ")[1];
-  jwt.verify(token, "secretkey", (err: unknown, decoded: unknown) => {
-    if (err) {
-      throw new Error("Token inválido");
-    }
-    res.status(200).json({
-      message: "Token válido",
-      response: { decoded },
-    });
-    next();
-  });
 }

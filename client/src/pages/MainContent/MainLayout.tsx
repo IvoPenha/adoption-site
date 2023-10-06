@@ -38,7 +38,7 @@ export const LandingPage: React.FC = () => {
               especie="Cachorro"
               nome={cachorro.nome}
               usuario={cachorro.nome}
-              pic="/dog-profile.png"
+              pic={!cachorro.fotos[0] ? "/dogprofile.jpg" : cachorro.fotos[0]}
               key={index}
               sexo={cachorro.sexo}
               onClick={() => navigate(`/pet/${cachorro.id}`)}
@@ -54,7 +54,7 @@ export const LandingPage: React.FC = () => {
                 especie={`${index}`}
                 nome={gato.nome}
                 usuario="Ana Francisca"
-                pic="/cat-profile.png"
+                pic={!gato.fotos[0] ? "/catprofile.jpg" : gato.fotos[0]}
                 key={index}
                 sexo={gato.sexo}
                 onClick={() => navigate(`/pet/${gato.id}`)}

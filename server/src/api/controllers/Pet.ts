@@ -16,6 +16,7 @@ export const createPet = async (
   res: BaseResponse<PetRequest>
 ) => {
   try {
+    console.log(req.body);
     const { id, ...rest } = req.body;
     const pet = await prisma.pet.create({
       data: {
@@ -77,6 +78,20 @@ export const getAllPets = async (
       where: filteredWhereClause,
       skip: (pageNumber - 1) * 10,
       take: 10,
+      select: {
+        fotos: true,
+        id: true,
+        nome: true,
+        ativo: true,
+        especie: true,
+        porte: true,
+        sexo: true,
+        user: {
+          select: {
+            nome: true,
+          },
+        },
+      },
     });
 
     res.status(200).json({
@@ -121,9 +136,29 @@ export const getPetById = async (
 ) => {
   try {
     const { petId } = req.params;
-    const pet = await prisma.pet.findUnique({
+    const pet = await prisma.pet.findFirst({
       where: {
         id: +petId,
+      },
+      select: {
+        id: true,
+        nome: true,
+        raca: true,
+        especie: true,
+        porte: true,
+        sexo: true,
+        idade: true,
+        descricao: true,
+        userId: true,
+        fotos: true,
+        user: {
+          select: {
+            id: true,
+            nome: true,
+            email: true,
+            telefone: true,
+          },
+        },
       },
     });
     res.status(200).json({
@@ -139,14 +174,15 @@ export const getPetById = async (
 };
 
 export const updatePet = async (
-  req: BaseRequest<PetRequest>,
+  req: BaseRequest<PetRequest, { petId: number }>,
   res: BaseResponse<PetRequest>
 ) => {
   try {
-    const { id, ...rest } = req.body;
+    const { petId } = req.params;
+    const { ...rest } = req.body;
     const pet = await prisma.pet.update({
       where: {
-        id: +id,
+        id: +petId,
       },
       data: {
         ...rest,

@@ -24,7 +24,12 @@ const AppRoutes = () => {
           />
           <Route path="/colocar-para-adocao"
             element={
-              <CriarPet />
+              <ProtectedRoute component={CriarPet} />
+            }
+          />
+          <Route path="pet/editar/:id"
+            element={
+              <ProtectedRoute component={CriarPet} />
             }
           />
           <Route path="/pet/:id"

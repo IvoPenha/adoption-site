@@ -6,12 +6,13 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider     = "postgresql"
+  url          = env("DATABASE_URL")
+  relationMode = "prisma"
 }
 
 model Pet {
-  id        Int     @id @default(autoincrement())
+  id        Int      @id @default(autoincrement())
   nome      String
   idade     Int?
   raca      String
@@ -19,20 +20,23 @@ model Pet {
   sexo      String
   descricao String
   especie   String
-  ativo     Boolean @default(true)
+  ativo     Boolean  @default(true)
+  fotos     String[]
   userId    Int
-  user      User    @relation(fields: [userId], references: [id])
-  fotos     Bytes[]
+  user      User     @relation(fields: [userId], references: [id])
+
+  @@index([userId])
 }
 
 model Profile {
   id                 Int     @id @default(autoincrement())
+  preferenciaEntrega String?
+  fotoPerfil         String?
+  descricao          String?
   userId             Int?    @unique
   user               User?   @relation(fields: [userId], references: [id])
-  preferenciaEntrega String?
-  preferenciaPorte   String?
-  fotoPerfil         Bytes?
-  descricao          String?
+
+  @@index([userId])
 }
 
 model Adoption {
@@ -50,7 +54,6 @@ model User {
   senha      String
   nascimento DateTime?
   telefone   String?
-  idPets     Int[]
   pets       Pet[]
   profile    Profile?
 }

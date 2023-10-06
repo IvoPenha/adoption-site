@@ -7,7 +7,13 @@ export interface IPetResponse {
   raca: string;
   porte: string;
   descricao: string;
-  foto: string;
+  fotos: string[];
+  user: {
+    id: number;
+    nome: string;
+    email: string;
+    telefone: string;
+  };
 }
 
 export interface IPet {

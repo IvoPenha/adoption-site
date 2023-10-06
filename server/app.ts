@@ -1,9 +1,9 @@
 const express = require("express");
-var cors = require('cors')
+var cors = require("cors");
 const { router } = require("./src/api");
 const bodyParser = require("body-parser");
-import * as admin from 'firebase-admin';
-import { initializeApp } from 'firebase-admin/app';
+import * as admin from "firebase-admin";
+import { initializeApp } from "firebase-admin/app";
 
 require("dotenv").config();
 
@@ -23,29 +23,38 @@ const app = express();
 // // Initialize Firebase
 
 admin.initializeApp({
-  credential: admin.credential.cert('./serviceAccountKey.json'),
-  databaseURL: "https://docpost-mvp-default-rtdb.firebaseio.com"
+  credential: admin.credential.cert("./serviceAccountKey.json"),
+  databaseURL: "https://docpost-mvp-default-rtdb.firebaseio.com",
 });
 
 // export const auth = getAuth(FirebaseApp);
 // export const googleProvider = new GoogleAuthProvider();
 
-app.use(cors())
-app.use(bodyParser.json());
-
+app.use(cors());
+app.use(bodyParser.json({ limit: "50mb", extended: true }));
+app.use(
+  bodyParser.urlencoded({
+    limit: "50mb",
+    extended: true,
+    parameterLimit: 50000,
+  })
+);
+app.use(bodyParser.text({ limit: "200mb" }));
 
 if (!process.env.PORT) {
-  throw new Error('port environment variable not defined, make sure to setup the environment first')
+  throw new Error(
+    "port environment variable not defined, make sure to setup the environment first"
+  );
 }
 
 app.listen(process.env.PORT, () => {
   console.log("listening on port " + process.env.PORT);
 });
 
-app.get("/", async (_req: any, res: { send: (arg0: string) => void; }) => {
+app.get("/", async (_req: any, res: { send: (arg0: string) => void }) => {
   res.send("Welcome to Gmail API with NodeJS");
 });
 
-app.use('/api', router)
+app.use("/api", router);
 
 export default admin;

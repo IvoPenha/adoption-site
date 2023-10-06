@@ -73,7 +73,7 @@ export function Card({ especie, nome, usuario, pic, sexo, onClick }: props) {
             rounded={'lg'}
             height={230}
             width={282}
-            objectFit={'cover'}
+            objectFit={'contain'}
             src={pic}
             alt="#"
           />

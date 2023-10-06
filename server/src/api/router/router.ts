@@ -1,5 +1,6 @@
 const express = require("express");
 import * as controllers from "../controllers";
+import { verificarToken } from "../middleware/AuthMiddleware";
 const router = express.Router();
 
 //#region Authentication
@@ -13,6 +14,11 @@ router.post("/profile", controllers.createProfile);
 router.put("/profile/:userId", controllers.updateProfile);
 router.delete("/profile/:userId", controllers.deleteProfile);
 //#endregion
+
+// #region middleware de autenticação
+router.put("/pet/:petId", verificarToken);
+router.post("/pet", verificarToken);
+// #endregion
 
 //#region Pet
 router.post("/pet", controllers.createPet);
