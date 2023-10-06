@@ -1,9 +1,4 @@
 import { Box, Button, FormControl, FormLabel, Heading, Input, Stack, Text, useColorModeValue } from "@chakra-ui/react";
-import { PiGoogleLogoDuotone } from "react-icons/pi";
-import { auth, googleProvider } from "../../firebase-settings";
-import { signInWithPopup } from "firebase/auth";
-import { logar } from "../../services/login";
-import { Cache, Cryptography } from "../../core";
 import { useAuth } from "../../hooks";
 import { Link, useNavigate } from "react-router-dom";
 import { SubmitHandler, useForm } from 'react-hook-form';
@@ -15,11 +10,7 @@ const LoginPage = () => {
   const {
     register,
     handleSubmit,
-    watch,
-    formState: { errors },
   } = useForm<IAuthRequest>();
-
-  const form = watch();
 
   const onSubmit: SubmitHandler<IAuthRequest> = async (data: any) => {
     try {

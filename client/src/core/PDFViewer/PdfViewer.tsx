@@ -1,5 +1,5 @@
-import { Box, Button, Icon } from '@chakra-ui/react';
-import { useRef,  Ref, useState } from 'react'
+import { Box, Button } from '@chakra-ui/react';
+import { useRef, Ref, useState } from 'react'
 import { Document, Page, pdfjs } from 'react-pdf'
 import { FiZoomIn, FiZoomOut } from 'react-icons/fi'
 import 'react-pdf/dist/esm/Page/AnnotationLayer.css';
@@ -8,7 +8,7 @@ type Props = {
   fileItem: Blob
 }
 
-function PDFViewer({ fileItem } : Props){
+function PDFViewer({ fileItem }: Props) {
   const canvasRef = useRef<Ref<HTMLCanvasElement> | undefined>()
   pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
   const [currentPage, setCurrentPage] = useState<number>(1)
@@ -34,22 +34,22 @@ function PDFViewer({ fileItem } : Props){
   }
 
   const zoomIn = () => {
-    setScale(prev => prev*1.5)
+    setScale(prev => prev * 1.5)
   }
   const zoomOut = () => {
-    setScale(prev => prev*0.5)
+    setScale(prev => prev * 0.5)
   }
-  
+
 
   return (
-    <div  className={'pdf-document'}>
-     <Document
+    <div className={'pdf-document'}>
+      <Document
         file={fileItem}
-        loading={<div style={{paddingBottom:20}}>Carregando</div>}
+        loading={<div style={{ paddingBottom: 20 }}>Carregando</div>}
         error={'Não foi possível carregar o PDF.'}
         noData={'Nenhum PDF encontrado.'}
         onLoadSuccess={onLoadSuccess}
-       
+
       >
         <Page
           canvasRef={canvasRef as Ref<HTMLCanvasElement>}
@@ -69,8 +69,8 @@ function PDFViewer({ fileItem } : Props){
           </Button>
         </Box>
         <Box display={'flex'} gap={'6px'}>
-            <FiZoomIn onClick={zoomIn} style={{color:'black' , background:'#ccc', borderRadius:'10px', display:'flex', alignItems:'center', justifyContent: 'center', textAlign:'center',height:40, width:40, padding:8, cursor: 'pointer'}}/>
-            <FiZoomOut onClick = {zoomOut} style={{color:'black' , background:'#ccc', borderRadius:'10px', display:'flex', alignItems:'center', justifyContent: 'center', textAlign:'center',height:40, width:40, padding:8, cursor: 'pointer'}}/>
+          <FiZoomIn onClick={zoomIn} style={{ color: 'black', background: '#ccc', borderRadius: '10px', display: 'flex', alignItems: 'center', justifyContent: 'center', textAlign: 'center', height: 40, width: 40, padding: 8, cursor: 'pointer' }} />
+          <FiZoomOut onClick={zoomOut} style={{ color: 'black', background: '#ccc', borderRadius: '10px', display: 'flex', alignItems: 'center', justifyContent: 'center', textAlign: 'center', height: 40, width: 40, padding: 8, cursor: 'pointer' }} />
 
         </Box>
         <span>

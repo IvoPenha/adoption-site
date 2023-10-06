@@ -1,6 +1,5 @@
 import { Box } from "@chakra-ui/react";
-import { width } from "pdfkit/js/page";
-import React, { Component, useRef } from "react";
+import React, { useRef } from "react";
 import Slider, { Settings } from "react-slick";
 import { GrCaretNext, GrCaretPrevious } from "react-icons/gr";
 

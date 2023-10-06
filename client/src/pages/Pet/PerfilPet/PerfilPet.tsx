@@ -3,7 +3,6 @@ import {
   Box,
   Button,
   Flex,
-  Icon,
   IconButton,
   Image,
   Input,
