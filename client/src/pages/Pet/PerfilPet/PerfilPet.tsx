@@ -308,7 +308,7 @@ export const PetProfile = () => {
                   )
                 }
               >
-                <BiSolidMessageAlt /> Quero adotar Diego
+                <BiSolidMessageAlt /> Quero adotar {pet?.nome}
               </Button>
             </Flex>
           </Box>
