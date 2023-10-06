@@ -117,7 +117,7 @@ const LoginPage = () => {
                       bg: "yellow.700",
                     }}
                   >
-                    Cadastrar
+                    Entrar
                   </Button>
                   {/* <Button onClick={() => signInWithGoogle()}>
                     {" "}

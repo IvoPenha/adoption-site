@@ -124,7 +124,10 @@ export const CriarPet = () => {
     setImages(updatedImages);
   };
 
+  const [isLoading, setIsLoading] = useState(false);
+
   const onSubmit: SubmitHandler<any> = async (data) => {
+    setIsLoading(true);
     if (id) {
       const pet = await updatePet(+id, data);
       if (pet.response) {
@@ -144,6 +147,7 @@ export const CriarPet = () => {
         );
       }
     }
+    setIsLoading(false);
   };
 
   return (
@@ -297,6 +301,8 @@ export const CriarPet = () => {
               _hover={{
                 bg: "yellow.700",
               }}
+              disabled={isLoading}
+              isLoading={isLoading}
             >
               Achar um lar pro bichinho
             </Button>
