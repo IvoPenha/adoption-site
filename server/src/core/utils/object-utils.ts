@@ -1,9 +1,9 @@
 export function removerPropriedade(
-  objeto: any,
+  objeto: Record<string, unknown>,
   nomeDaPropriedade: string
 ): void {
   // Verificar se a propriedade existe no objeto
-  if (objeto.hasOwnProperty(nomeDaPropriedade)) {
+  if (Object.prototype.hasOwnProperty.call(objeto, nomeDaPropriedade)) {
     // Usar o operador delete para remover a propriedade do objeto
     delete objeto[nomeDaPropriedade];
     // Retornar true para indicar que a propriedade foi removida com sucesso

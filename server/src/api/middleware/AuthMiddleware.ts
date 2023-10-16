@@ -1,11 +1,10 @@
 import jwt from "jsonwebtoken";
-import { User } from "@prisma/client";
-import { BaseRequest, BaseResponse } from "../../domain";
+import { NextFunction, Request, Response } from 'express';
 
 export async function verificarToken(
-  req: BaseRequest<User>,
-  res: BaseResponse<User>,
-  next: any
+  req: Request,
+  res: Response,
+  next: NextFunction
 ) {
   const { authorization } = req.headers;
   if (!authorization) {
@@ -13,7 +12,7 @@ export async function verificarToken(
   }
   const token = authorization.split(" ")[1];
 
-  jwt.verify(token, "secretkey", (err: any, decoded: any) => {
+  jwt.verify(token, "secretkey", (err: unknown) => {
     if (err) {
       return res.status(401).json({ message: "Token inválido", error: err });
     }

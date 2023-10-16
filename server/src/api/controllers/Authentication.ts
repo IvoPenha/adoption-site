@@ -1,8 +1,7 @@
-import { Response } from "express";
-import { PrismaClient, User } from "@prisma/client";
+import { Request, Response } from "express";
+import { PrismaClient } from "@prisma/client";
 import { decryptText, encryptText } from "../../core";
 // import { createProfileWithoutResponse } from "./Profile";
-import { BaseRequest, BaseResponse } from "../../domain";
 import jwt from "jsonwebtoken";
 
 const prisma = new PrismaClient();
@@ -14,11 +13,11 @@ interface signUp {
     email?: string;
     senha?: string;
     nome?: string;
-    error?: any;
+    error?: unknown;
   };
 }
 
-export async function signUp(req: BaseRequest<User>, res: BaseResponse<User>) {
+export async function signUp(req: Request, res: Response) {
   try {
     const { nome, email, senha, nascimento, telefone } = req.body;
     const hasUser = await prisma.user.findFirst({
@@ -54,10 +53,10 @@ export async function signUp(req: BaseRequest<User>, res: BaseResponse<User>) {
         id: user.id,
       },
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
     res.status(500).json({
       message: "Ocorreu um erro durante o cadastro",
-      response: { error: error.message },
+      response: { error: (error as Error).message },
     });
   }
 }

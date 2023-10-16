@@ -1,17 +1,7 @@
-import { PrismaClient, Profile } from "@prisma/client";
-import { Response } from "express";
-import {
-  BaseRequest,
-  BaseRequestParams,
-  BaseRequestQuery,
-  BaseResponse,
-} from "../../domain";
+import { PrismaClient } from "@prisma/client";
+import { Request, Response } from 'express';
 
 const prisma = new PrismaClient();
-
-interface ProfileRequest extends Omit<Profile, "id"> {
-  id?: number | null; // tornando id nulo (nullable)
-}
 
 export const createProfileWithoutResponse = async (req: number) => {
   try {
@@ -22,20 +12,20 @@ export const createProfileWithoutResponse = async (req: number) => {
       },
     });
     return profile;
-  } catch (error: any) {
+  } catch (error: unknown) {
     return null;
   }
 };
 
 export const createProfile = async (
-  req: BaseRequest<ProfileRequest>,
-  res: BaseResponse<Profile>
+  req: Request,
+  res: Response
 ) => {
   try {
-    const { id, ...rest } = req.body;
+    const { ...rest } = req.body;
     const profile = await prisma.profile.create({
       data: {
-        ...rest,
+        ...rest
       },
     });
     res.status(200).json({
@@ -47,17 +37,18 @@ export const createProfile = async (
         avatar: profile.fotoPerfil,
       },
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
     res.status(500).json({
       message: "Ocorreu um erro durante o cadastro",
-      response: { error: error.message },
+
+      response: { error: (error as Error).message },
     });
   }
 };
 
 export const updateProfile = async (
-  req: BaseRequest<ProfileRequest, { id: number }>,
-  res: BaseResponse<Profile>
+  req: Request,
+  res: Response
 ) => {
   try {
     const paramsId = req.params.id;
@@ -83,19 +74,18 @@ export const updateProfile = async (
         avatar: profile.fotoPerfil,
       },
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
     res.status(500).json({
       message: "Ocorreu um erro durante a atualização",
-      response: { error: error.message },
+
+      response: { error: (error as Error).message },
     });
   }
 };
 
 export const getAllProfiles = async (
-  req: BaseRequestQuery<{
-    page?: string;
-  }>,
-  res: BaseResponse<Profile>
+  req: Request,
+  res: Response
 ) => {
   try {
     const { page = 1 } = req.query;
@@ -108,19 +98,18 @@ export const getAllProfiles = async (
       message: "Perfis encontrados",
       response: profiles,
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
     res.status(500).json({
       message: "Ocorreu um erro durante a busca",
-      response: { error: error.message },
+
+      response: { error: (error as Error).message },
     });
   }
 };
 
 export const getProfileById = async (
-  req: BaseRequestParams<{
-    id: string;
-  }>,
-  res: BaseResponse<Profile>
+  req: Request,
+  res: Response
 ) => {
   try {
     const { id } = req.params;
@@ -136,19 +125,18 @@ export const getProfileById = async (
       message: "Perfil encontrado",
       response: profile,
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
     res.status(500).json({
       message: "Ocorreu um erro durante a busca",
-      response: { error: error.message },
+
+      response: { error: (error as Error).message },
     });
   }
 };
 
 export const deleteProfile = async (
-  req: BaseRequestParams<{
-    id: string;
-  }>,
-  res: BaseResponse<Profile>
+  req: Request,
+  res: Response
 ) => {
   try {
     const { id } = req.params;
@@ -161,19 +149,18 @@ export const deleteProfile = async (
       message: "Perfil deletado com sucesso",
       response: profile,
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
     res.status(500).json({
       message: "Ocorreu um erro durante a deleção",
-      response: { error: error.message },
+
+      response: { error: (error as Error).message },
     });
   }
 };
 
 export const getProfileByUserId = async (
-  req: BaseRequestParams<{
-    userId: string;
-  }>,
-  res: BaseResponse<Profile>
+  req: Request,
+  res: Response
 ) => {
   try {
     const { userId } = req.params;
@@ -189,10 +176,11 @@ export const getProfileByUserId = async (
       message: "Perfil encontrado",
       response: profile,
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
     res.status(500).json({
       message: "Ocorreu um erro durante a busca",
-      response: { error: error.message },
+
+      response: { error: (error as Error).message },
     });
   }
 };

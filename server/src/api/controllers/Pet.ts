@@ -1,27 +1,22 @@
-import { Response } from "express";
-import { PrismaClient, Pet } from "@prisma/client";
-import { BaseResponse } from "../../domain/response/base-response";
-import { BaseRequest, BaseRequestParams, BaseRequestQuery } from "../../domain";
+import { PrismaClient } from "@prisma/client";
+import { removerPropriedade } from '../../core';
+import { Request, Response } from 'express';
 
 const prisma = new PrismaClient();
 
-interface PetRequest extends Omit<Pet, "id"> {
-  id?: number | null; // tornando id nulo (nullable)
-}
-
 export const createPet = async (
-  req: {
-    body: PetRequest;
-  },
-  res: BaseResponse<PetRequest>
+  req: Request,
+  res: Response
 ) => {
   try {
-    console.log(req.body);
-    const { id, ...rest } = req.body;
+    const request = req.body;
+    const petData = {
+      ...request,
+      id: request.id !== null ? request.id : undefined,
+    };
+    removerPropriedade(petData as unknown as Record<string, unknown>, "id");
     const pet = await prisma.pet.create({
-      data: {
-        ...rest,
-      },
+      data: petData,
     });
     res.status(200).json({
       message: "Pet cadastrado com sucesso",
@@ -31,22 +26,17 @@ export const createPet = async (
         raca: pet.raca,
       },
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
     res.status(500).json({
       message: "Ocorreu um erro durante o cadastro",
-      response: { error: error.message },
+      response: { error: (error as Error).message },
     });
   }
 };
 
 export const getAllPets = async (
-  req: BaseRequestQuery<{
-    page?: string;
-    userId?: string | null;
-    especie?: string | null;
-    tamanho?: string | null;
-  }>,
-  res: BaseResponse<PetRequest>
+  req: Request,
+  res: Response
 ) => {
   try {
     const {
@@ -62,16 +52,14 @@ export const getAllPets = async (
       especie?: string;
       porte?: string;
     } = {
-      userId: userId !== null ? parseInt(userId) : undefined,
-      especie: especie !== null ? especie : undefined,
-      porte: tamanho !== null ? tamanho : undefined,
+      userId: userId !== null ? +userId as number : undefined,
+      especie: especie !== null ? especie as string : undefined,
+      porte: tamanho !== null ? tamanho as string : undefined,
     };
 
     // Remover entradas nulas ou indefinidas do objeto whereClause
     const filteredWhereClause = Object.fromEntries(
-      Object.entries(whereClause).filter(
-        ([_, v]) => v !== null && v !== undefined
-      )
+      Object.entries(whereClause).filter(([, value]) => value !== null && value !== undefined)
     );
 
     const pets = await prisma.pet.findMany({
@@ -98,17 +86,17 @@ export const getAllPets = async (
       message: "Pets encontrados com sucesso",
       response: pets,
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
     res.status(500).json({
       message: "Ocorreu um erro durante a busca",
-      response: { error: error.message },
+      response: { error: (error as Error).message },
     });
   }
 };
 
 export const getAllPetsByUser = async (
-  req: BaseRequestParams<{ userId: number }>,
-  res: BaseResponse<PetRequest>
+  req: Request,
+  res: Response
 ) => {
   try {
     const { userId } = req.params;
@@ -122,17 +110,18 @@ export const getAllPetsByUser = async (
       message: "Pets encontrados com sucesso",
       response: pets,
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
     res.status(500).json({
       message: "Ocorreu um erro durante a busca",
-      response: { error: error.message },
+
+      response: { error: (error as Error).message },
     });
   }
 };
 
 export const getPetById = async (
-  req: BaseRequestParams<{ petId: number }>,
-  res: BaseResponse<PetRequest>
+  req: Request,
+  res: Response
 ) => {
   try {
     const { petId } = req.params;
@@ -165,17 +154,18 @@ export const getPetById = async (
       message: "Pet encontrado com sucesso",
       response: pet,
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
     res.status(500).json({
       message: "Ocorreu um erro durante a busca",
-      response: { error: error.message },
+
+      response: { error: (error as Error).message },
     });
   }
 };
 
 export const updatePet = async (
-  req: BaseRequest<PetRequest, { petId: number }>,
-  res: BaseResponse<PetRequest>
+  req: Request,
+  res: Response
 ) => {
   try {
     const { petId } = req.params;
@@ -192,17 +182,18 @@ export const updatePet = async (
       message: "Pet atualizado com sucesso",
       response: pet,
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
     res.status(500).json({
       message: "Ocorreu um erro durante a atualização",
-      response: { error: error.message },
+
+      response: { error: (error as Error).message },
     });
   }
 };
 
 export const deletePet = async (
-  req: BaseRequestParams<{ petId: number }>,
-  res: BaseResponse<PetRequest>
+  req: Request,
+  res: Response
 ) => {
   try {
     const { petId } = req.params;
@@ -215,10 +206,11 @@ export const deletePet = async (
       message: "Pet deletado com sucesso",
       response: pet,
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
     res.status(500).json({
       message: "Ocorreu um erro durante a deleção",
-      response: { error: error.message },
+
+      response: { error: (error as Error).message },
     });
   }
 };

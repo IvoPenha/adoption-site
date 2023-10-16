@@ -1,11 +1,8 @@
-const express = require("express");
-var cors = require("cors");
-const { router } = require("./src/api");
-const bodyParser = require("body-parser");
+import express from "express";
+import cors from 'cors'
+import { router } from "./src/api";
+import bodyParser from "body-parser";
 import * as admin from "firebase-admin";
-import { initializeApp } from "firebase-admin/app";
-
-require("dotenv").config();
 
 const app = express();
 
@@ -31,7 +28,7 @@ admin.initializeApp({
 // export const googleProvider = new GoogleAuthProvider();
 
 app.use(cors());
-app.use(bodyParser.json({ limit: "50mb", extended: true }));
+app.use(bodyParser.json({ limit: "50mb" }));
 app.use(
   bodyParser.urlencoded({
     limit: "50mb",
@@ -51,7 +48,7 @@ app.listen(process.env.PORT, () => {
   console.log("listening on port " + process.env.PORT);
 });
 
-app.get("/", async (_req: any, res: { send: (arg0: string) => void }) => {
+app.get("/", async (_req: express.Request, res: { send: (arg0: string) => void }) => {
   res.send("Welcome to Gmail API with NodeJS");
 });
 

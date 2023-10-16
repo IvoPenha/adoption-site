@@ -1,24 +1,19 @@
-import { PrismaClient, Adoption } from "@prisma/client";
-import {
-  BaseRequest,
-  BaseRequestParams,
-  BaseRequestQuery,
-  BaseResponse,
-} from "../../domain";
+import { PrismaClient } from "@prisma/client";
+import { removerPropriedade } from '../../core';
+import { Request, Response } from 'express';
 
 const prisma = new PrismaClient();
 
-interface AdoptionRequest extends Omit<Adoption, "id"> {}
-
 export const createAdoption = async (
-  req: BaseRequest<AdoptionRequest>,
-  res: BaseResponse<Adoption>
+  req: Request,
+  res: Response
 ) => {
   try {
-    const { id, ...rest } = req.body;
+    const request = req.body;
+    removerPropriedade(request, "id")
     const adoption = await prisma.adoption.create({
       data: {
-        ...rest,
+        ...request,
       },
     });
     res.status(200).json({
@@ -30,21 +25,17 @@ export const createAdoption = async (
         createdAt: adoption.createdAt,
       },
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
     res.status(500).json({
       message: "Ocorreu um erro durante o cadastro",
-      response: { error: error.message },
+      response: { error: (error as Error).message },
     });
   }
 };
 
 export const getAllAdoptions = async (
-  req: BaseRequestQuery<{
-    page?: string;
-    userId?: string | null;
-    petId?: string | null;
-  }>,
-  res: BaseResponse<Adoption[]>
+  req: Request,
+  res: Response
 ) => {
   try {
     const { page = 1, userId = null, petId = null } = req.query;
@@ -73,19 +64,17 @@ export const getAllAdoptions = async (
       message: "Adoções encontradas",
       response: adoptions,
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
     res.status(500).json({
       message: "Ocorreu um erro durante a busca",
-      response: { error: error.message },
+      response: { error: (error as Error).message },
     });
   }
 };
 
 export const getAdoptionById = async (
-  req: BaseRequestParams<{
-    id: string;
-  }>,
-  res: BaseResponse<Adoption>
+  req: Request,
+  res: Response
 ) => {
   try {
     const { id } = req.params;
@@ -101,19 +90,17 @@ export const getAdoptionById = async (
       message: "Adoção encontrada",
       response: adoption,
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
     res.status(500).json({
       message: "Ocorreu um erro durante a busca",
-      response: { error: error.message },
+      response: { error: (error as Error).message },
     });
   }
 };
 
 export const deleteAdoption = async (
-  req: BaseRequestParams<{
-    id: string;
-  }>,
-  res: BaseResponse<Adoption>
+  req: Request,
+  res: Response
 ) => {
   try {
     const { id } = req.params;
@@ -126,17 +113,17 @@ export const deleteAdoption = async (
       message: "Adoção deletada com sucesso",
       response: adoption,
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
     res.status(500).json({
       message: "Ocorreu um erro durante a deleção",
-      response: { error: error.message },
+      response: { error: (error as Error).message },
     });
   }
 };
 
 export const updateAdoption = async (
-  req: BaseRequest<AdoptionRequest, { id: number }>,
-  res: BaseResponse<Adoption>
+  req: Request,
+  res: Response
 ) => {
   try {
     const { id: paramsId } = req.params;
@@ -168,10 +155,10 @@ export const updateAdoption = async (
       message: "Adoção atualizada com sucesso",
       response: adoption,
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
     res.status(500).json({
       message: "Ocorreu um erro durante a atualização",
-      response: { error: error.message },
+      response: { error: (error as Error).message },
     });
   }
 };

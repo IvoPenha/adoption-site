@@ -1,4 +1,4 @@
-const express = require("express");
+import express from "express";
 import * as controllers from "../controllers";
 import { verificarToken } from "../middleware/AuthMiddleware";
 const router = express.Router();

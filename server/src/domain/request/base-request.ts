@@ -1,6 +1,6 @@
 import { Request as ExpressRequest } from "express";
 
-export type BaseRequest<T, Y = {}> = ExpressRequest & {
+export type BaseRequest<T, Y = object> = ExpressRequest & {
   body: T;
   queries?: Y;
   params?: Y;
